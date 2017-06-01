@@ -24,14 +24,13 @@ function ocr_sip_styles(){
  */
 function protocolList($diseaseSiteDescription)
 {
-    //delete_transient( 'protocol_list_'.$diseaseSiteDescription );
     $transient = get_transient('protocol_list_' . $diseaseSiteDescription);
     if (!empty($transient)) {
         return $transient;
     } else {
         $url = 'http://oncore.cancer.ufl.edu/sip/SIPControlServlet?hdn_function=SIP_PROTOCOL_LISTINGS&disease_site=' . $diseaseSiteDescription . '';
         $args = array(
-            'headers' => array(//'token' => ''
+            'headers' => array(
             ),
         );
         $out = wp_remote_get($url, $args);
@@ -90,14 +89,14 @@ add_shortcode('protocolsList', 'protocol_list_shortcode');
  */
 function protocolDetails($protocol_id,$protocol_no)
 {
-    //delete_transient( 'protocol_detail_'.$protocol_id );
+
     $transient = get_transient('protocol_detail_' . $protocol_id);
     if (!empty($transient)) {
         return $transient;
     } else {
         $url = 'http://oncore.cancer.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id'.$protocol_id.'&protocol_no='.$protocol_no;
         $args = array(
-            'headers' => array(//'token' => ''
+            'headers' => array(
             ),
         );
         $out = wp_remote_get($url, $args);
