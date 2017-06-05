@@ -47,13 +47,13 @@ function protocol_list( $disease_site_desc ) {
 			foreach ( $anchors as $anchor ) {
 				$replaced_string = str_replace( $replace_arr, '', $anchor->getAttribute( 'href' ) );
 				$protocol_id     = explode( ',', $replaced_string );
-				$protcol_id     = $protocol_id[0];
-				$protocol_no    = $anchor->textContent;
+				$protocol_id     = $protocol_id[0];
+				$protocol_no     = $anchor->textContent;
 				$arr_params     = array(
-					'protocol_id' => $protcol_id,
+					'protocol_id' => $protocol_id,
 					'protocol_no' => $protocol_no,
 				);
-				$url            = add_query_arg( $arr_params, wp_get_canonical_url() . 'protocol-summary ' );
+				$url = add_query_arg( $arr_params, wp_get_canonical_url() . 'protocol-summary ' );
 				$anchor->setAttribute( 'href', $url );
 			}
 			$result = $doc->saveHTML( $body );
@@ -111,7 +111,6 @@ function protocol_summary( $protocol_id, $protocol_no ) {
 			$doc->loadHTML( $out['body'] );
 			$result = $doc->saveHTML();
 			set_transient( 'protocol_detail_' . $protocol_id, $result, DAY_IN_SECONDS );
-
 			return $result;
 		}
 		return null;
