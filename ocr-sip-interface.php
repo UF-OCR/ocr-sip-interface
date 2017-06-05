@@ -109,7 +109,11 @@ function protocol_summary( $protocol_id, $protocol_no ) {
 			$doc = new DOMDocument();
 			libxml_use_internal_errors( true );
 			$doc->loadHTML( $out['body'] );
-			$result = $doc->saveHTML();
+			$body    = $doc->getElementsByTagName( 'body' );
+			if ( $body && 0 < $body->length ) {
+				$body = $body->item( 0 );
+			}
+			$result = $doc->saveHTML( $body );
 			set_transient( 'protocol_detail_' . $protocol_id, $result, DAY_IN_SECONDS );
 			return $result;
 		}
