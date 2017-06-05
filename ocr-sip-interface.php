@@ -1,147 +1,144 @@
 <?php
 /**
- * Plugin Name: ocr-sip-interface
- * Description: Plugin to  cache and display a JSON-Feed.
+ * Plugin Name: OCR SIP Interface
+ * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
+ * Description: Dynamic URL for protocol summary.
  * Version: 1.0
- * Author: hkoranne
+ * Text Domain: ocr-sip-interface
+ * Author: OCR
+ * Copyright 2017
  */
 
-// Register style sheet.
 add_action( 'wp_enqueue_scripts', 'ocr_sip_styles' );
 
 /**
- * Register style sheet. this stylesheet is the custom style sheet from onCore SIP.
+ * Custom styles.
  */
-function ocr_sip_styles(){
-    wp_register_style( 'ocr-sip-plugin', plugins_url( 'ocr-sip-interface/css/ocr-sip-style.css' ) );
-    wp_enqueue_style( 'ocr-sip-plugin' );
+function ocr_sip_styles() {
+	wp_register_style( 'ocr-sip-plugin', plugins_url( 'ocr-sip-interface/css/ocr-sip-style.css' ) );
+	wp_enqueue_style( 'ocr-sip-plugin' );
 }
 
 /**
- * Get a list of protocols for diseaseSites
- * @param $diseaseSiteDescription
- * @return object The HTTP response that comes as a result of a wp_remote_get().
+ * Listing the protocols for the selected disease site.
+ *
+ * @param string $disease_site_desc     The Disease Site selected.
+ *
+ * @return mixed|null|string
  */
-function protocolList($diseaseSiteDescription)
-{
-    $transient = get_transient('protocol_list_' . $diseaseSiteDescription);
-    if (!empty($transient)) {
-        return $transient;
-    } else {
-        $url = 'http://oncore.cancer.ufl.edu/sip/SIPControlServlet?hdn_function=SIP_PROTOCOL_LISTINGS&disease_site=' . $diseaseSiteDescription . '';
-        $args = array(
-            'headers' => array(
-            ),
-        );
-        $out = wp_remote_get($url, $args);
-        if(!is_wp_error($out)){
-            $doc = new DOMDocument();
-            $doc->loadHTML($out['body']);
-            // remove the scripts and styles received from OnCoreSip
-            removeElementsByTagName('script', $doc);
-            removeElementsByTagName('style', $doc);
-            removeElementsByTagName('link', $doc);
-            //replacing the links with dynamic links
-            $anchors = $doc->getElementsByTagName("a");
-            $replaceArr = array('javascript:displayProtocolSummary','(',')','\'');
-            foreach ($anchors as $anchor){
-                $replacedString = str_replace($replaceArr,'',$anchor->getAttribute("href"));
-                $protocolId = explode(",",$replacedString);
-                $protocolId =$protocolId[0];
-                $protocolNo = $anchor->textContent;
-                $arr_params = array('protocolid' => $protocolId,'protocolno'=> $protocolNo);
-                $url = add_query_arg($arr_params, wp_get_canonical_url().'protocol-details ');
-                $anchor->setAttribute('href',$url);
-            }
-            $result= $doc->saveHTML();
-            set_transient('protocol_list_' . $diseaseSiteDescription, $result, DAY_IN_SECONDS);
-            return $result;
-        }
-        return null;
-    }
+function protocol_list( $disease_site_desc ) {
+	$transient = get_transient( 'protocol_list_' . $disease_site_desc );
+	if ( ! empty( $transient ) ) {
+		return $transient;
+	} else {
+		$url = 'http://oncore.cancer.ufl.edu/sip/SIPControlServlet?hdn_function=SIP_PROTOCOL_LISTINGS&disease_site=' . $disease_site_desc . '';
+		$out = wp_remote_get( $url );
+		if ( ! is_wp_error( $out ) ) {
+			$doc = new DOMDocument();
+			$doc->loadHTML( $out['body'] );
+			/* loading only body element */
+			$body    = $doc->getElementsByTagName( 'body' );
+			if ( $body && 0 < $body->length ) {
+				$body = $body->item( 0 );
+			}
+			/* replacing the links with dynamic links */
+			$anchors    = $doc->getElementsByTagName( 'a' );
+			$replace_arr = array( 'javascript:displayProtocolSummary', '(', ')', '\'' );
+			foreach ( $anchors as $anchor ) {
+				$replaced_string = str_replace( $replace_arr, '', $anchor->getAttribute( 'href' ) );
+				$protocol_id     = explode( ',', $replaced_string );
+				$protcol_id     = $protocol_id[0];
+				$protocol_no    = $anchor->textContent;
+				$arr_params     = array(
+					'protocol_id' => $protcol_id,
+					'protocol_no' => $protocol_no,
+				);
+				$url            = add_query_arg( $arr_params, wp_get_canonical_url() . 'protocol-summary ' );
+				$anchor->setAttribute( 'href', $url );
+			}
+			$result = $doc->saveHTML( $body );
+			set_transient( 'protocol_list_' . $disease_site_desc, $result, DAY_IN_SECONDS );
+
+			return $result;
+		}
+		return null;
+	}
 }
+
+add_filter( 'protocol_list', 'protocol_list' );
 
 /**
- * ShortCode for displaying the list of protocol for selected disease site.
- * @param $args
- * @return string
+ * Short code for protocol list.
+ *
+ * @param array|mixed $args     Receives the input from the short code.
+ *
+ * @return mixed|string
  */
-function protocol_list_shortcode($args)
-{
-    if (isset($args['diseasesite'])) {
-        $diseaseSiteDesc = $args['diseasesite'];
-        $plRequest = protocolList($diseaseSiteDesc);
-        if(is_null($plRequest)){
-            return "<h4>Whoops, something went wrong. Please try again!</h4>";
-        }
-         return $plRequest;
-    } else {
-        return '<h4>Please select the cancer type.</h4>';
-    }
+function protocol_list_short_code( $args ) {
+	if ( isset( $args['disease_site_desc'] ) ) {
+		$disease_site_desc = $args['disease_site_desc'];
+		$pl_request        = apply_filters( 'protocol_list', $disease_site_desc );
+		if ( is_null( $pl_request ) ) {
+			return '<h4>Whoops, something went wrong. Please try again!</h4>';
+		}
+		return $pl_request;
+	} else {
+		return '<h4>Please select the cancer type.</h4>';
+	}
 }
 
-add_shortcode('protocolsList', 'protocol_list_shortcode');
+add_shortcode( 'protocolsList', 'protocol_list_short_code' );
 
 /**
- * Get protocol details
- * @param $protocol_id $protocol_no
- * @return object The HTTP response that comes as a result of a wp_remote_get().
+ * Functionality to display protocol summary.
+ *
+ * @param String $protocol_id   The id to the protocol.
+ *
+ * @param String $protocol_no   The protocol number to the the protocol.
+ *
+ * @return mixed|null|string
  */
-function protocolDetails($protocol_id,$protocol_no)
-{
+function protocol_summary( $protocol_id, $protocol_no ) {
+	$transient = get_transient( 'protocol_detail_' . $protocol_id );
+	if ( ! empty( $transient ) ) {
+		return $transient;
+	} else {
+		$url = 'http://oncore.cancer.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id' . $protocol_id . '&protocol_no=' . $protocol_no;
+		$out = wp_remote_get( $url );
+		if ( ! is_wp_error( $out ) ) {
+			$doc = new DOMDocument();
+			libxml_use_internal_errors( true );
+			$doc->loadHTML( $out['body'] );
+			$result = $doc->saveHTML();
+			set_transient( 'protocol_detail_' . $protocol_id, $result, DAY_IN_SECONDS );
 
-    $transient = get_transient('protocol_detail_' . $protocol_id);
-    if (!empty($transient)) {
-        return $transient;
-    } else {
-        $url = 'http://oncore.cancer.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id'.$protocol_id.'&protocol_no='.$protocol_no;
-        $args = array(
-            'headers' => array(
-            ),
-        );
-        $out = wp_remote_get($url, $args);
-        if(!is_wp_error($out)) {
-            $doc = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $doc->loadHTML($out['body']);
-            $result= $doc->saveHTML();
-            set_transient('protocol_detail_' . $protocol_id, $result, DAY_IN_SECONDS);
-            return $result;
-        }
-        return null;
-    }
+			return $result;
+		}
+		return null;
+	}
 }
+
+add_filter( 'protocol_summary', 'protocol_summary', 10, 2 );
 
 /**
- * Shortcode for protocolDetails
- * @return string
+ * Short code for protocol details.
+ *
+ * @return mixed|string
  */
-function protocol_details_shortcode()
-{
-    if (isset($_GET['protocolid']) && isset($_GET['protocolno'])) {
-        $pdRequest = protocolDetails($_GET['protocolid'],$_GET['protocolno']);
-        if(is_null($pdRequest)){
-            return '<h4>Whoops, something went wrong. Please try again!</h4>';
-        }
-        return $pdRequest;
-    } else {
-        return '<h4>Please select a protocol</h4>';
-    }
+function protocol_summary_short_code() {
+	if ( isset( $_GET['protocol_id'] ) && isset( $_GET['protocol_no'] ) ) {
+		$protocol_id = sanitize_text_field( wp_unslash( $_GET['protocol_id'] ) );
+		$protocol_no = sanitize_text_field( wp_unslash( $_GET['protocol_no'] ) );
+		$pd_request  = apply_filters( 'protocol_summary', $protocol_id, $protocol_no );
+		if ( is_null( $pd_request ) ) {
+			return '<h4>Whoops, something went wrong. Please try again!</h4>';
+		}
+		return $pd_request;
+	} else {
+		return '<h4>Please select a protocol</h4>';
+	}
 }
 
-add_shortcode('protocolDetails', 'protocol_details_shortcode');
+add_shortcode( 'protocolSummary', 'protocol_summary_short_code' );
 
-/**
- * Remove the nodes for a given tag name
- * @param $tagName
- * @param $document
- */
-function removeElementsByTagName($tagName, $document) {
-    $nodeList = $document->getElementsByTagName($tagName);
-    for ($nodeIdx = $nodeList->length; --$nodeIdx >= 0; ) {
-        $node = $nodeList->item($nodeIdx);
-        $node->parentNode->removeChild($node);
-    }
-}
 
-?>
