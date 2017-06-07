@@ -1,6 +1,5 @@
 === Plugin Name ===
-Contributors: Harshita koranne
-Donate link: http://oncore.cancer.ufl.edu/sip/SIPControlServlet/
+Contributors: OCR
 Short codes: [protocolSummary],[protocolsList disease_site_desc='disease_site_desc']
 
 ocr-sip-plugin communicates with the OnCore SIP API, and creates a dynamic link(protocol number specific).
