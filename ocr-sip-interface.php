@@ -110,6 +110,11 @@ function protocol_summary( $protocol_id, $protocol_no ) {
 				$body = $body->item( 0 );
 			}
 			$result = wp_kses_post( $doc->saveHTML( $body ) );
+            //java.lang.NullPointerException
+            // added check for SIP null pointer
+            if(strpos($result, "java.lang.NullPointerException") !== false){
+                return null;
+            }
 			set_transient( 'protocol_detail_' . $protocol_id, $result, DAY_IN_SECONDS );
 			return $result;
 		}
