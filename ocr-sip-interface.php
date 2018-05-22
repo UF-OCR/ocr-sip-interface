@@ -14,7 +14,7 @@ define( 'OCR_PLUGIN_DIR', __DIR__ );
 
 require_once OCR_PLUGIN_DIR . '/models/protocol.php';
 
-require_once OCR_PLUGIN_DIR . '/models/clinicalTrial.php';
+require_once OCR_PLUGIN_DIR . '/models/clinical-trial.php';
 
 
 /**
@@ -30,7 +30,7 @@ function protocol_list( $disease_site_desc ) {
 		return $transient;
 	} else {
 		$protocol_list_str = build_protocol_list( $disease_site_desc );
-		if ( strpos( $protocol_list_str, 'scheduled maintenance' ) !== false ) {
+		if ( strpos( $protocol_list_str, 'scheduled maintenance' ) ) {
 			return $protocol_list_str;
 		}
 		if ( ! empty( $protocol_list_str ) ) {
@@ -129,7 +129,7 @@ function protocol_summary( $protocol_id, $protocol_no ) {
 	if ( false !== $transient ) {
 		return $transient;
 	} else {
-		$clinical_trial = new ClinicalTrail();
+		$clinical_trial = new Clinical_Trail();
 		$protocol       = build_protocol_obj( $protocol_id, $protocol_no );
 		if ( ! is_null( $protocol ) ) {
 			if ( $protocol->is_active ) {
@@ -139,7 +139,7 @@ function protocol_summary( $protocol_id, $protocol_no ) {
 				$protocol_summary_str = build_protocol_summary( $protocol, $clinical_trial );
 				$result               = wp_kses_post( $protocol_summary_str );
 				// oncore sip api null pointers.
-				if ( strpos( $result, 'java.lang.NullPointerException' ) !== false ) {
+				if ( strpos( $result, 'java.lang.NullPointerException' ) ) {
 					return null;
 				}
 				if ( ! empty( $result ) ) {
@@ -378,7 +378,7 @@ function build_protocol_obj( $protocol_id, $protocol_no ) {
  * @return ClinicalTrail
  */
 function build_clinical_trial_obj( $nct_id ) {
-	$clinical_trial_obj = new ClinicalTrail();
+	$clinical_trial_obj = new Clinical_Trail();
 	$url                = esc_url_raw( 'https://clinicaltrials.gov/ct2/show/' . $nct_id . '?displayxml=true' );
 	$out                = wp_remote_get( $url );
 	if ( ! is_wp_error( $out ) ) {
