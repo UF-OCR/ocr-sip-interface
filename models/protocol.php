@@ -7,21 +7,21 @@
  */
 Class Protocol
 {
-    public $protocolNo;
-    public $secondaryProtocolNo;
-    public $protocolTitle;
-    public $protocolPi;
-    public $protocolObjective;
-    public $layDescription;
+    public $protocol_no;
+    public $secondary_protocol_no;
+    public $protocol_title;
+    public $protocol_pi;
+    public $protocol_objective;
+    public $lay_description;
     public $treatment;
-    public $protocolPhase;
-    public $protocolAge;
-    public $protocolScope;
-    public $detailElig;
-    public $diseaseSite;
-    public $protocolInstitution;
-    public $nctUrl;
-    public $nctId;
+    public $protocol_phase;
+    public $protocol_age;
+    public $protocol_scope;
+    public $detail_elig;
+    public $disease_site;
+    public $protocol_institution;
+    public $nct_url;
+    public $nct_id;
     public $contact;
-    public $isActive;
+    public $is_active;
 }

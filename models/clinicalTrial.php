@@ -7,14 +7,14 @@
  */
 Class ClinicalTrail
 {
-    public $nctId;
+    public $nct_id;
     public $objective;
     public $title;
-    public $detailedDescription;
+    public $detailed_description;
     public $phase;
-    public $detailedEligibility;
+    public $detailed_eligibility;
     public $treatment;
     public $gender;
-    public $minimumAge;
-    public $maximumAge;
+    public $minimum_age;
+    public $maximum_age;
 }
