@@ -1,29 +1,29 @@
 <?php
-    /**
-     * Plugin Name: OCR SIP Interface
-     * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
-     * Description: Dynamic URL for protocol summary.
-     * Version: 1.0
-     * Text Domain: ocr-sip-interface
-     * Contact: oncore-support@ahc.ufl.edu
-     * Author: OCR
-     */
-    
-    
-    define('OCR_PLUGIN_DIR', __DIR__);
-    
-    require_once OCR_PLUGIN_DIR . '/models/protocol.php';
-    
-    require_once OCR_PLUGIN_DIR . '/models/clinical-trial.php';
-    
-    
-    /**
-     * Listing the protocols for the selected disease site.
-     *
-     * @param string $disease_site_desc The Disease Site selected.
-     *
-     * @return mixed|null|string
-     */
+/**
+ * Plugin Name: OCR SIP Interface
+ * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
+ * Description: Dynamic URL for protocol summary.
+ * Version: 1.0
+ * Text Domain: ocr-sip-interface
+ * Contact: oncore-support@ahc.ufl.edu
+ * Author: OCR
+ */
+
+
+define('OCR_PLUGIN_DIR', __DIR__);
+
+require_once OCR_PLUGIN_DIR . '/models/protocol.php';
+
+require_once OCR_PLUGIN_DIR . '/models/clinical-trial.php';
+
+
+/**
+ * Listing the protocols for the selected disease site.
+ *
+ * @param string $disease_site_desc The Disease Site selected.
+ *
+ * @return mixed|null|string
+ */
 function protocol_list( $disease_site_desc ) 
 {
     $transient = get_transient('protocol_list_' . $disease_site_desc);
@@ -43,14 +43,14 @@ function protocol_list( $disease_site_desc )
         }
     }
 }
-    
-    /**
-     * Builds the protocol list content
-     *
-     * @param string $disease_site_desc The Disease Site selected.
-     *
-     * @return mixed|string
-     */
+
+/**
+ * Builds the protocol list content
+ *
+ * @param string $disease_site_desc The Disease Site selected.
+ *
+ * @return mixed|string
+ */
 function build_protocol_list( $disease_site_desc ) 
 {
     $url               = esc_url_raw('http://oncore.cancer.ufl.edu/sip/SIPControlServlet?hdn_function=SIP_PROTOCOL_LISTINGS&disease_site=' . $disease_site_desc);
@@ -78,9 +78,9 @@ function build_protocol_list( $disease_site_desc )
                             $protocol_no        = $row_child->childNodes->item(0)->textContent;
                             $protocol_title     = $row_child->childNodes->item(1)->textContent;
                             $arr_params         = array(
-                                                        'protocol_id' => $protocol_id,
-                                                        'protocol_no' => $protocol_no,
-                                                        );
+                                'protocol_id' => $protocol_id,
+                                'protocol_no' => $protocol_no,
+                            );
                             $url                = add_query_arg($arr_params, wp_get_canonical_url() . 'protocol-summary');
                             $anchor             = '<a href=\'' . $url . '\'>' . $protocol_no . '</a>';
                             $protocol_list_str .= '<dt>' . $anchor . '</dt>';
@@ -95,14 +95,14 @@ function build_protocol_list( $disease_site_desc )
     }
     return '<h3>OnCore is currently undergoing scheduled maintenance.</h3><h4>We\'ll be back soon.</br></br> Sorry for the inconvenience.</h4>';
 }
-    
-    /**
-     * Short code for protocol list.
-     *
-     * @param array|mixed $args Receives the input from the short code.
-     *
-     * @return mixed|string
-     */
+
+/**
+ * Short code for protocol list.
+ *
+ * @param array|mixed $args Receives the input from the short code.
+ *
+ * @return mixed|string
+ */
 function protocol_list_short_code( $args ) 
 {
     if (isset($args['disease_site_desc']) ) {
@@ -116,17 +116,17 @@ function protocol_list_short_code( $args )
         return '<h4>Choose a cancer type to find the protocol listing.</h4>';
     }
 }
-    
-    add_shortcode('protocolsList', 'protocol_list_short_code');
-    
-    /**
-     * Functionality to display protocol summary.
-     *
-     * @param string $protocol_id internal id of the protocol selected.
-     * @param string $protocol_no OCR# of the protocol selected.
-     *
-     * @return mixed|null|string
-     */
+
+add_shortcode('protocolsList', 'protocol_list_short_code');
+
+/**
+ * Functionality to display protocol summary.
+ *
+ * @param string $protocol_id internal id of the protocol selected.
+ * @param string $protocol_no OCR# of the protocol selected.
+ *
+ * @return mixed|null|string
+ */
 function protocol_summary( $protocol_id, $protocol_no ) 
 {
     $transient = get_transient('protocol_detail_' . $protocol_id);
@@ -156,13 +156,13 @@ function protocol_summary( $protocol_id, $protocol_no )
         }
     }
 }
-    
-    
-    /**
-     * Short code for protocol details.
-     *
-     * @return mixed|string
-     */
+
+
+/**
+ * Short code for protocol details.
+ *
+ * @return mixed|string
+ */
 function protocol_summary_short_code() 
 {
     if (isset($_GET['protocol_id']) && isset($_GET['protocol_no']) ) {
@@ -177,17 +177,17 @@ function protocol_summary_short_code()
         return '<h4>Choose a protocol to find detailed information.</h4>';
     }
 }
-    
-    add_shortcode('protocolSummary', 'protocol_summary_short_code');
-    
-    /**
-     * Build the protocol summary text content
-     *
-     * @param Protocol      $protocol       is a protocol objects.
-     * @param ClinicalTrail $clinical_trial is a clinicalTrial object.
-     *
-     * @return mixed|null|string
-     */
+
+add_shortcode('protocolSummary', 'protocol_summary_short_code');
+
+/**
+ * Build the protocol summary text content
+ *
+ * @param Protocol      $protocol       is a protocol objects.
+ * @param ClinicalTrail $clinical_trial is a clinicalTrial object.
+ *
+ * @return mixed|null|string
+ */
 function build_protocol_summary( $protocol, $clinical_trial ) 
 {
     if (! is_null($protocol->protocol_no) ) {
@@ -248,22 +248,22 @@ function build_protocol_summary( $protocol, $clinical_trial )
             $protocol_summary .= '<p>' . $protocol->contact . '</p>';
         }
         if (! is_null($protocol->nct_url) ) {
-            $protocol_summary .= '<p><strong>More Information: </strong>View study listing on ClinicialTrials.gov
-                <a target=\'_blank\' href=\'' . $protocol->nct_url . '\'/>' . $protocol->nct_url . '</p>';
+            $protocol_summary .= '<p><strong>More Information: </strong>View study listing on ClinicialTrials.gov 
+                                    <a target=\'_blank\' href=\'' . $protocol->nct_url . '\'/>' . $protocol->nct_url . '</p>';
         }
         return $protocol_summary;
     }
     return null;
 }
-    
-    /**
-     * Build the protocol object
-     *
-     * @param string $protocol_id The id to the protocol.
-     * @param string $protocol_no The protocol number to the the protocol.
-     *
-     * @return Protocol
-     */
+
+/**
+ * Build the protocol object
+ *
+ * @param string $protocol_id The id to the protocol.
+ * @param string $protocol_no The protocol number to the the protocol.
+ *
+ * @return Protocol
+ */
 function build_protocol_obj( $protocol_id, $protocol_no ) 
 {
     $protocol_obj = new Protocol();
@@ -277,23 +277,23 @@ function build_protocol_obj( $protocol_id, $protocol_no )
         if (! is_null($doc->getElementById('protocolNo')) ) {
             $protocol_obj->protocol_no = $doc->getElementById('protocolNo')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('secondaryProtocolNo')) ) {
             $protocol_obj->secondary_protocol_no = $doc->getElementById('secondaryProtocolNo')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolTitle')) ) {
             $protocol_obj->protocol_title = $doc->getElementById('protocolTitle')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolPi')) ) {
             $protocol_obj->protocol_pi = $doc->getElementById('protocolPi')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolObjective')) ) {
             $protocol_obj->protocol_objective = $doc->getElementById('protocolObjective')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('treatment')) ) {
             foreach ( $doc->getElementById('treatment')->childNodes as $treament_str ) {
                 if (! is_null($treament_str->textContent) && ! empty($treament_str->textContent) ) {
@@ -301,32 +301,32 @@ function build_protocol_obj( $protocol_id, $protocol_no )
                 }
             }
         }
-            
+
         if (! is_null($doc->getElementById('layDescription')) ) {
             $protocol_obj->lay_description = $doc->getElementById('layDescription')->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolPhase')) ) {
             $protocol_obj->protocol_phase = $doc->getElementById('protocolPhase')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolAge')) ) {
             $protocol_obj->protocol_age = $doc->getElementById('protocolAge')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('protocolScope')) ) {
             $protocol_obj->protocol_scope = $doc->getElementById('protocolScope')->childNodes->item(0)->textContent;
         }
-            
+
         if (! is_null($doc->getElementById('detailElig')) ) {
             foreach ( $doc->getElementById('detailElig')->childNodes as $detail_elig ) {
-                    
+
                 if (! is_null($detail_elig->textContent) && ! empty($detail_elig->textContent) ) {
                     $protocol_obj->detail_elig .= '</br>' . $detail_elig->textContent;
                 }
             }
         }
-            
+
         if (! is_null($doc->getElementById('diseaseSite')) ) {
             $protocol_obj->disease_site .= '<p>';
             foreach ( $doc->getElementById('diseaseSite')->childNodes as $disease_site ) {
@@ -336,7 +336,7 @@ function build_protocol_obj( $protocol_id, $protocol_no )
             }
             $protocol_obj->disease_site .= '</p>';
         }
-            
+
         if (! is_null($doc->getElementById('protocolInstitution')) ) {
             $protocol_obj->protocol_institution .= '<p>';
             foreach ( $doc->getElementById('protocolInstitution')->childNodes as $protocol_institution ) {
@@ -346,7 +346,7 @@ function build_protocol_obj( $protocol_id, $protocol_no )
             }
             $protocol_obj->protocol_institution .= '</p>';
         }
-            
+
         if (! is_null($doc->getElementById('contactinfo')) ) {
             $contact_name = $doc->getElementById('contactinfo')->childNodes->item(2)->textContent;
             if (! empty($contact_name) ) {
@@ -363,11 +363,11 @@ function build_protocol_obj( $protocol_id, $protocol_no )
                 $protocol_obj->contact = $contact_str;
             }
         }
-            
+
         if (! is_null($doc->getElementById('moreInformation')) ) {
             $protocol_obj->nct_url = $doc->getElementById('moreInformation')->childNodes->item(6)->textContent;
         }
-            
+
         if (! is_null($protocol_obj->nct_url) ) {
             $protocol_obj->nct_id = str_replace('http://www.clinicaltrials.gov/ct2/show/', '', $protocol_obj->nct_url);
         }
@@ -376,14 +376,14 @@ function build_protocol_obj( $protocol_id, $protocol_no )
     }
     return $protocol_obj;
 }
-    
-    /**
-     * Build the clinicalTrial object
-     *
-     * @param string $nct_id The id to the sponsor.
-     *
-     * @return ClinicalTrail
-     */
+
+/**
+ * Build the clinicalTrial object
+ *
+ * @param string $nct_id The id to the sponsor.
+ *
+ * @return ClinicalTrail
+ */
 function build_clinical_trial_obj( $nct_id ) 
 {
     $clinical_trial_obj = new Clinical_Trail();
@@ -392,26 +392,26 @@ function build_clinical_trial_obj( $nct_id )
     if (! is_wp_error($out) ) {
         $xml_doc = new DOMDocument();
         $xml_doc->loadXML($out['body']);
-            
+
         if (! is_null($xml_doc->getElementsByTagName('brief_title')) ) {
             $clinical_trial_obj->title = $xml_doc->getElementsByTagName('brief_title')->item(0)->textContent;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('brief_summary')) ) {
             $clinical_trial_obj->objective = $xml_doc->getElementsByTagName('brief_summary')->item(0)->textContent;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('phase')) ) {
             $clinical_trial_obj->phase = $xml_doc->getElementsByTagName('phase')->item(0)->textContent;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('detailed_description')) ) {
             if (! is_null($xml_doc->getElementsByTagName('detailed_description')->item(0)) ) {
                 $clinical_trial_obj->detailed_description = $xml_doc->getElementsByTagName('detailed_description')
                     ->item(0)->getElementsByTagName('textblock')->item(0)->textContent;
             }
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('arm_group')) ) {
             $study_arm_str = '<p>';
             foreach ( $xml_doc->getElementsByTagName('arm_group') as $arm_group ) {
@@ -423,7 +423,7 @@ function build_clinical_trial_obj( $nct_id )
             $study_arm_str                .= '</p>';
             $clinical_trial_obj->treatment = $study_arm_str;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('eligibility')->item(0)) ) {
             $clinical_trial_obj->detailed_eligibility = preg_replace(
                 '/[\r\n\r\n]/', '',
@@ -434,20 +434,20 @@ function build_clinical_trial_obj( $nct_id )
                 $clinical_trial_obj->detailed_eligibility
             );
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('gender')) ) {
             $clinical_trial_obj->gender = $xml_doc->getElementsByTagName('gender')->item(0)->textContent;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('minimum_age')) ) {
             $clinical_trial_obj->minimum_age = $xml_doc->getElementsByTagName('minimum_age')->item(0)->textContent;
         }
-            
+
         if (! is_null($xml_doc->getElementsByTagName('maximum_age')) ) {
             $clinical_trial_obj->maximum_age = $xml_doc->getElementsByTagName('maximum_age')->item(0)->textContent;
         }
-            
+
         return $clinical_trial_obj;
     }
 }
-    
+
