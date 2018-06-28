@@ -260,7 +260,7 @@ function build_protocol_summary( $protocol, $clinical_trial ) {
  */
 function build_protocol_obj( $protocol_id, $protocol_no ) {
 	$protocol_obj = new Protocol();
-	$url          = esc_url_raw( 'http://oncore.ahc.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id' . $protocol_id . '&protocol_no=' . $protocol_no );
+	$url          = esc_url_raw( 'http://oncore.cancer.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id' . $protocol_id . '&protocol_no=' . $protocol_no );
 	$out          = wp_remote_get( $url );
 	if ( ! is_wp_error( $out ) ) {
 		$protocol_obj->is_active = true;
