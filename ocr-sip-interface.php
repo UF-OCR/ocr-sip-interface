@@ -417,14 +417,7 @@ function build_clinical_trial_obj( $nct_id ) {
 		}
 
 		if ( ! is_null( $xml_doc->getElementsByTagName( 'eligibility' )->item( 0 ) ) ) {
-			$clinical_trial_obj->detailed_eligibility = preg_replace(
-				'/[\r\n\r\n]/', '',
-				$xml_doc->getElementsByTagName( 'eligibility' )->item( 0 )->getElementsByTagName( 'textblock' )->item( 0 )->textContent
-			);
-			$clinical_trial_obj->detailed_eligibility = '<br>' . preg_replace(
-				'/[-]/', '<br>-',
-				$clinical_trial_obj->detailed_eligibility
-			);
+            $clinical_trial_obj->detailed_eligibility = $xml_doc->getElementsByTagName( 'eligibility' )->item( 0 )->getElementsByTagName( 'textblock' )->item( 0 )->textContent;
 		}
 
 		if ( ! is_null( $xml_doc->getElementsByTagName( 'gender' ) ) ) {
