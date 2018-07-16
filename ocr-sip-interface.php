@@ -3,7 +3,7 @@
  * Plugin Name: OCR SIP Interface
  * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
  * Description: Dynamic URL for protocol summary.
- * Version: 1.4
+ * Version: 1.5
  * Text Domain: ocr-sip-interface
  * Contact: oncore-support@ahc.ufl.edu
  * Author: OCR
@@ -194,7 +194,7 @@ function build_protocol_summary( $protocol, $clinical_trial ) {
 		}
 		$title = is_null( $protocol->protocol_title ) ? $protocol->protocol_title : $clinical_trial->title;
 		if ( ! empty( $title ) ) {
-			$protocol_summary .= '<p><strong>Protocol Title.: </strong>' . $title . '</p>';
+			$protocol_summary .= '<p><strong>Protocol Title: </strong>' . $title . '</p>';
 		}
 		if ( ! is_null( $protocol->protocol_pi ) ) {
 			$protocol_summary .= '<p><strong>Principal Investigator: </strong>' . $protocol->protocol_pi . '</p>';
@@ -236,7 +236,7 @@ function build_protocol_summary( $protocol, $clinical_trial ) {
 			$protocol_summary .= '<p><strong>Applicable Conditions: </strong>' . $protocol->disease_site . '</p>';
 		}
 		if ( ! is_null( $protocol->protocol_institution ) ) {
-			$protocol_summary .= '<p><strong>Pariticipation Institution: </strong>' . $protocol->protocol_institution . '</p>';
+			$protocol_summary .= '<p><strong>Participation Institution: </strong>' . $protocol->protocol_institution . '</p>';
 		}
 		if ( ! is_null( $protocol->contact ) ) {
 			$protocol_summary .= '<p>' . $protocol->contact . '</p>';
