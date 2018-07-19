@@ -3,7 +3,7 @@
  * Plugin Name: OCR SIP Interface
  * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
  * Description: Dynamic URL for protocol summary.
- * Version: 1.5
+ * Version: 1.6
  * Text Domain: ocr-sip-interface
  * Contact: oncore-support@ahc.ufl.edu
  * Author: OCR
@@ -347,7 +347,7 @@ function build_protocol_obj( $protocol_id, $protocol_no ) {
 				$contact_str  .= '</br>' . $contact_name . '';
 				$contact_phone = $doc->getElementById( 'contactinfo' )->childNodes->item( 5 )->textContent;
 				if ( ! empty( $contact_phone ) ) {
-					$contact_str .= '</br>Phone: ' . $contact_phone . '';
+					$contact_str .= '</br>Phone: <a href=\'tel:' . $contact_phone . '\'> ' . $contact_phone . '</a>';
 				}
 				$contact_email = $doc->getElementById( 'contactinfo' )->childNodes->item( 7 )->textContent;
 				if ( ! empty( $contact_email ) ) {
