@@ -5,7 +5,6 @@
  * @author  OCR
  */
 class Protocol {
-
 	public $protocol_no;
 	public $secondary_protocol_no;
 	public $protocol_title;
