@@ -3,7 +3,7 @@
  * Plugin Name: OCR SIP Interface
  * Plugin URI: http://oncore.cancer.ufl.edu/sip/SIPControlServlet
  * Description: Dynamic URL for protocol summary.
- * Version: 1.8
+ * Version: 1.7
  * Text Domain: ocr-sip-interface
  * Contact: oncore-support@ahc.ufl.edu
  * Author: OCR

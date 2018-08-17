@@ -2,7 +2,7 @@
 /**
  * Class for config objects
  *
- * Since version 1.8
+ * Since version 1.7
  *
  * @author  OCR
  */
