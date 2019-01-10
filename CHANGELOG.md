@@ -1,6 +1,5 @@
 # Change Log
-All notable changes to the ocr-sip-interface will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/).
+All notable changes to the ocr-sip-interface will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.2] - 2018-05-23
 ### Added
