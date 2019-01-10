@@ -2,12 +2,12 @@
 All notable changes to the ocr-sip-interface will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.3] - 2018-05-23
+## [1.2] - 2018-05-23
 ### Added
 - Added config files
 - Added study contact person's contact link
 - Added EOL logic to handle CT.GOV object parsing
-### Changes
+### Changed
 - Detailed eligibility layout fix
 - Label text changes
 
