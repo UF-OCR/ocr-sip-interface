@@ -8,8 +8,8 @@
  */
 class OcrSipInterfaceConfig {
 
-	public $protocol_list_url    = 'http://oncore.cancer.ufl.edu/sip/SIPControlServlet?hdn_function=SIP_PROTOCOL_LISTINGS&disease_site=';
-	public $protocol_summary_url = 'http://oncore.cancer.ufl.edu/sip/SIPMain?hdn_function=SIP_PROTOCOL_SUMMARY&protocol_id=';
+	public $protocol_list_url    = 'http://your-oncore-forte-disease-site-url';
+	public $protocol_summary_url = 'http://your-oncore-forte-protocol-summary-url';
 	public $warning_message      = 'Whoops, something went wrong. Please try again!';
 	public $protocol_listing_wm  = 'Choose a cancer type to find the protocol listing.';
 	public $maintanance_msg      = "<h3>OnCore is currently undergoing scheduled maintenance.</h3>
