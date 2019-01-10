@@ -1,23 +1,26 @@
-=== Plugin Name ===
-Contributors: OCR
-Short codes: [protocolSummary],[protocolsList disease_site_desc='disease_site_desc']
+# OCR SIP Interface Plugin
+- OCR-SIP plugin was developed to seamlessly add protocol listings and protocol summaries to your Institutional WordPress sites. 
+- The plugin can be used to add your protocol listing/protocol summary to any post, page or text widget by using the `[protocolsList]` and `[protocolSummary]` shortcodes. OCR-SIP Plugin is maintained by the OCR OnCore Development Team.
 
-ocr-sip-plugin communicates with the OnCore SIP API, and creates a dynamic link(protocol number specific).
+## Prerequisites
+- Wordpress Version 4.0 or higher
+- OnCore SIP API activated
 
-== Installation ==
-
-1. Upload `ocr-sip-interface` to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Place [protocolsList disease_site_desc='diseaseSiteDesc'] in your templates to get the protocol Lists
-4. [protocolSummary] to get the protocol summary
+## Installation
+- Clone this repo into your machine.
+- Update your SIP URLS in ocr-sip-interface-config.php file.
+- Upload the folder into wordpress site via plugin interface, and then enable it.
 
 
-== Example ==
+## Displaying a protocol list
 
-To list the protocols for a cancer type:
-Ex: Bladder Cancer
-[protocolsList disease_site_desc='Bladder']
+- The ocr-sip-interface plugin uses `[protocolsList disease_site_desc='diseaseSiteDesc']` shortcode to insert the protocol list page feed. 
+- You have to set the parameter for the disease site (diseaseSiteDesc) within the short code. 
+- The disease site parameter comes from either the protocol disease site (Oncology protocols only) in PC Console or the Web Description assigned in the SIP Console (all protocols).
+- Ex: `[protocolsList disease_site_desc='Bladder'], [protocolsList disease_site_desc='Liver']`, etc
 
-For Protocol Details
-[protocolSummary]
+## Displaying a protocol
 
+- The ocr-sip-interface plugin uses `[protocol Summary]` shortcodes to insert the protocol summary page. 
+- For Protocol Summary, no parameters are used within the shortcode because the plugin automatically sets the protocol parameter. 
+- Ex: `[protocolSummary]`
