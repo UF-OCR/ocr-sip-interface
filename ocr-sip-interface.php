@@ -188,7 +188,7 @@ function build_protocol_summary( $protocol, $clinical_trial ) {
 		if ( ! is_null( $protocol->secondary_protocol_no ) ) {
 			$protocol_summary .= '<p><strong>' . $config_inst->sponsor_label . '</strong>' . $protocol->secondary_protocol_no . '</p>';
 		}
-		$title = is_null( $protocol->protocol_title ) ? $protocol->protocol_title : $clinical_trial->title;
+		$title = ! empty( $protocol->protocol_title ) ? $protocol->protocol_title : $clinical_trial->title;
 		if ( ! empty( $title ) ) {
 			$protocol_summary .= '<p><strong>' . $config_inst->protocol_title_label . '</strong>' . $title . '</p>';
 		}
